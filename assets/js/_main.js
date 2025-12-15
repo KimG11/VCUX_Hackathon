@@ -23,6 +23,7 @@ let determineComputedTheme = () => {
 const browserPref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 // Set the theme on page load or when explicitly called
+// Set the theme on page load or when explicitly called
 let setTheme = (theme) => {
   const use_theme =
     theme ||
@@ -30,22 +31,42 @@ let setTheme = (theme) => {
     $("html").attr("data-theme") ||
     browserPref;
 
+  $("html").attr("data-theme", use_theme);
+
+  // Update icon class
+  $("#theme-icon").removeClass("fa-sun fa-moon fa-palette");
   if (use_theme === "dark") {
-    $("html").attr("data-theme", "dark");
-    $("#theme-icon").removeClass("fa-sun").addClass("fa-moon");
-  } else if (use_theme === "light") {
-    $("html").removeAttr("data-theme");
-    $("#theme-icon").removeClass("fa-moon").addClass("fa-sun");
+    $("#theme-icon").addClass("fa-moon");
+  } else if (use_theme === "blue-pink") {
+    $("#theme-icon").addClass("fa-palette"); // Or another suitable icon for blue-pink
+  } else {
+    $("#theme-icon").addClass("fa-sun");
+    if (use_theme === "light") {
+      $("html").removeAttr("data-theme"); // Default fallback
+    }
   }
 };
 
-// Toggle the theme manually
+// Toggle the theme manually (deprecated in favor of set) but kept for potential legacy use
 var toggleTheme = () => {
-  const current_theme = $("html").attr("data-theme");
-  const new_theme = current_theme === "dark" ? "light" : "dark";
+  // Cycle: Light -> Dark -> Blue-Pink -> Light
+  const current_theme = $("html").attr("data-theme") || "light";
+  let new_theme = "dark";
+  if (current_theme === "dark") {
+    new_theme = "blue-pink";
+  } else if (current_theme === "blue-pink") {
+    new_theme = "light";
+  }
+
   localStorage.setItem("theme", new_theme);
   setTheme(new_theme);
 };
+
+// Set specific theme from dropdown
+const setSpecificTheme = (themeName) => {
+  localStorage.setItem("theme", themeName);
+  setTheme(themeName);
+}
 
 /* ==========================================================================
    Plotly integration script so that Markdown codeblocks will be rendered
@@ -93,14 +114,19 @@ $(document).ready(function () {
   // If the user hasn't chosen a theme, follow the OS preference
   setTheme();
   window.matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener("change", (e) => {
-          if (!localStorage.getItem("theme")) {
-            setTheme(e.matches ? "dark" : "light");
-          }
-        });
+    .addEventListener("change", (e) => {
+      if (!localStorage.getItem("theme")) {
+        setTheme(e.matches ? "dark" : "light");
+      }
+    });
 
   // Enable the theme toggle
-  $('#theme-toggle').on('click', toggleTheme);
+  // $('#theme-toggle').on('click', toggleTheme); // Deprecated single toggle
+  $('.theme-dropdown-content a').on('click', function (e) {
+    e.preventDefault();
+    var theme = $(this).attr('data-theme');
+    setSpecificTheme(theme);
+  });
 
   // Enable the sticky footer
   var bumpIt = function () {
@@ -114,7 +140,8 @@ $(document).ready(function () {
     if (didResize) {
       didResize = false;
       bumpIt();
-    }}, 250);
+    }
+  }, 250);
   var didResize = false;
   bumpIt();
 

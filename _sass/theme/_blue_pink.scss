@@ -1,0 +1,32 @@
+/* ==========================================================================
+   BLUE-PINK THEME
+   ========================================================================== */
+
+/* Color codes used for the theme */
+$blue-pink-bg : #1e1e2e;
+$blue-pink-text : #FF10F0;
+$blue-pink-primary : #ff79c6; // Pink
+$blue-pink-secondary : #8be9fd; // Cyan/Blue
+$blue-pink-border : #6272a4;
+
+$masthead-height : 70px;
+
+/* Blue-Pink theme for the site */
+html[data-theme="blue-pink"] {
+    --global-base-color : #{$blue-pink-text};
+    --global-bg-color : #{$blue-pink-bg};
+    --global-footer-bg-color : #{$blue-pink-bg};
+    --global-border-color : #{$blue-pink-border};
+    --global-dark-border-color : #{$blue-pink-border};
+    --global-code-background-color: #282a36;
+    --global-code-text-color: #f8f8f2;
+    --global-fig-caption-color : #{$blue-pink-text};
+    --global-link-color : #{$blue-pink-secondary};
+    --global-link-color-hover : #{$blue-pink-primary};
+    --global-link-color-visited : #{$blue-pink-primary};
+    --global-masthead-link-color : #{$blue-pink-text};
+    --global-masthead-link-color-hover : #{$blue-pink-primary};
+    --global-text-color : #{$blue-pink-text};
+    --global-text-color-light : #{$blue-pink-text};
+    --global-thead-color : #{$blue-pink-border};
+}
